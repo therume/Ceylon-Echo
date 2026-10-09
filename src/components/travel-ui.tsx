@@ -15,8 +15,10 @@ import {
 import { router, usePathname } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { HeritageBackground } from '@/components/heritage-background';
+
 export const TravelColors = {
-  background: '#fbfaf5',
+  background: '#f1e2c1',
   surface: '#ffffff',
   ink: '#26382f',
   muted: '#777d75',
@@ -62,6 +64,7 @@ export function ScreenFrame({
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.safeArea}>
+      <HeritageBackground />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[styles.content, contentStyle]}

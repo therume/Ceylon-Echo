@@ -6,6 +6,7 @@ import { useReducedMotion } from 'react-native-reanimated';
 import { AdminAuthProvider, useAdminAuth } from '@/features/admin/admin-auth';
 import { AdminProvider } from '@/features/admin/admin-context';
 import { adminColors } from '@/features/admin/admin-ui';
+import { HeritageBackground } from '@/components/heritage-background';
 
 export default function AdminLayout() {
   return (
@@ -37,6 +38,7 @@ function AdminRoutes() {
   if (isLoading) {
     return (
       <View style={styles.loading}>
+        <HeritageBackground />
         <ActivityIndicator color={adminColors.green} />
       </View>
     );

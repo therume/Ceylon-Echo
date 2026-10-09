@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { HeritageBackground } from '@/components/heritage-background';
 import { onboardingNavigation } from '@/navigation/app-navigation';
 import { getSavedLanguage, saveLanguage } from '@/lib/language-preference';
 import type { AppLanguage } from '@/lib/language-preference';
@@ -82,6 +83,7 @@ export default function LanguageScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <HeritageBackground />
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -207,7 +209,7 @@ export default function LanguageScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8f7f2',
+    backgroundColor: '#f1e2c1',
   },
   scrollContent: {
     flexGrow: 1,

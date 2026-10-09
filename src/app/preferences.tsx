@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { AuthGate } from '@/components/auth-gate';
+import { HeritageBackground } from '@/components/heritage-background';
 import { useAuth } from '@/context/AuthContext';
 import { getUserProfile, updateUserProfile } from '@/services/userService';
 
@@ -83,6 +84,7 @@ function AuthenticatedPreferencesScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <HeritageBackground />
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <View style={styles.mark}>
@@ -150,7 +152,7 @@ function AuthenticatedPreferencesScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#fbfaf5',
+    backgroundColor: '#f1e2c1',
   },
   content: {
     flexGrow: 1,

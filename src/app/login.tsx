@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { HeritageBackground } from '@/components/heritage-background';
 import { useAuth } from '@/context/AuthContext';
 import { onboardingNavigation } from '@/navigation/app-navigation';
 import { getAuthErrorMessage } from '@/services/authService';
@@ -75,6 +76,7 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <HeritageBackground />
       <KeyboardAvoidingView
         style={styles.keyboardArea}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -289,7 +291,7 @@ function ModeButton({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8f6ef',
+    backgroundColor: '#f1e2c1',
   },
   keyboardArea: {
     flex: 1,

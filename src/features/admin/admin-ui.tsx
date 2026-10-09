@@ -2,8 +2,10 @@ import type { ReactNode } from 'react';
 import type { TextInputProps, ViewStyle } from 'react-native';
 import { Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { HeritageBackground } from '@/components/heritage-background';
+
 export const adminColors = {
-  background: '#F8F7F2',
+  background: '#f1e2c1',
   surface: '#FFFFFF',
   text: '#26382F',
   muted: '#777D75',
@@ -15,7 +17,12 @@ export const adminColors = {
 };
 
 export function AdminScreen({ children }: { children: ReactNode }) {
-  return <SafeAreaView style={styles.safeArea}>{children}</SafeAreaView>;
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <HeritageBackground />
+      {children}
+    </SafeAreaView>
+  );
 }
 
 export function AdminHeader({

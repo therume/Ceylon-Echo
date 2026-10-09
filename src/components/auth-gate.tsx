@@ -2,6 +2,7 @@ import { useEffect, type ReactNode } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 
+import { HeritageBackground } from '@/components/heritage-background';
 import { useAuth } from '@/context/AuthContext';
 import { TravelColors } from '@/components/travel-ui';
 
@@ -17,6 +18,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (isLoading || !user) {
     return (
       <View style={styles.loading}>
+        <HeritageBackground />
         <ActivityIndicator color={TravelColors.green} />
       </View>
     );
