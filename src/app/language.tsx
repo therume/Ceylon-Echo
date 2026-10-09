@@ -16,6 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { onboardingNavigation } from '@/navigation/app-navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import type { AppLanguage } from '@/lib/language-preference';
+import { ParchmentBackground } from '@/components/parchment-background';
 
 const languageOptions: {
   code: AppLanguage;
@@ -58,6 +59,7 @@ export default function LanguageScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <ParchmentBackground />
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}

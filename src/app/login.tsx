@@ -21,6 +21,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { onboardingNavigation } from '@/navigation/app-navigation';
 import { getAuthErrorMessage } from '@/services/authService';
+import { ParchmentBackground } from '@/components/parchment-background';
 
 type SignInMode = 'user' | 'visitor';
 
@@ -126,6 +127,7 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <ParchmentBackground />
       <KeyboardAvoidingView
         style={styles.keyboardArea}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>

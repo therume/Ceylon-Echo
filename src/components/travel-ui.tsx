@@ -14,6 +14,7 @@ import { router, usePathname } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '@/context/LanguageContext';
+import { ParchmentBackground } from '@/components/parchment-background';
 
 export const TravelColors = {
   background: '#fbfaf5',
@@ -56,6 +57,7 @@ export function ScreenFrame({
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.safeArea}>
+      <ParchmentBackground />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[styles.content, contentStyle]}

@@ -13,6 +13,7 @@ import {
 
 import { useAdminAuth } from '@/features/admin/admin-auth';
 import { AdminButton, AdminField, AdminScreen, adminColors } from '@/features/admin/admin-ui';
+import { ParchmentBackground } from '@/components/parchment-background';
 
 export default function AdminLoginScreen() {
   const { user, isAdmin, isFirebaseConfigured, error: authError, signIn, signOutAdmin } =
@@ -59,6 +60,7 @@ export default function AdminLoginScreen() {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.container}>
+        <ParchmentBackground />
         <Pressable
           accessibilityLabel="Back to onboarding"
           accessibilityRole="button"

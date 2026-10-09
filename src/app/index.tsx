@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { onboardingNavigation } from '@/navigation/app-navigation';
+import { ParchmentBackground } from '@/components/parchment-background';
 
 export default function WelcomePage() {
   const { user, isLoading, role, isRoleLoading, roleError, refreshUserRole } = useAuth();
@@ -103,6 +104,7 @@ export default function WelcomePage() {
         />
       ) : null}
       <View style={styles.imageOverlay} />
+      <ParchmentBackground opacity={0.1} washOpacity={0} />
 
       <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
         <Animated.View entering={FadeIn.duration(650)} style={styles.topBar}>

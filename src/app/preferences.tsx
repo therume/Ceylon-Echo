@@ -7,6 +7,7 @@ import { AuthGate } from '@/components/auth-gate';
 import { useAuth } from '@/context/AuthContext';
 import { getUserProfile, updateUserProfile } from '@/services/userService';
 import { useLanguage } from '@/context/LanguageContext';
+import { ParchmentBackground } from '@/components/parchment-background';
 
 const interests = [
   { id: 'heritage', title: 'ancientHeritage', detail: 'heritageDescription' },
@@ -86,6 +87,7 @@ function AuthenticatedPreferencesScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <ParchmentBackground />
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <View style={styles.mark}>
