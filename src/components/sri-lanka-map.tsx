@@ -12,6 +12,11 @@ type GoogleMarker = {
   setMap: (map: GoogleMap | null) => void;
 };
 
+type GoogleInfoWindow = {
+  open: (options: { map: GoogleMap; anchor: GoogleMarker }) => void;
+  setContent: (content: HTMLElement) => void;
+};
+
 type GoogleMapsApi = {
   Map: new (
     element: HTMLElement,
@@ -28,6 +33,7 @@ type GoogleMapsApi = {
     position: { lat: number; lng: number };
     title: string;
   }) => GoogleMarker;
+  InfoWindow: new (options: { maxWidth: number }) => GoogleInfoWindow;
   event: {
     addListener: (
       instance: GoogleMarker,
@@ -90,6 +96,7 @@ export default function SriLankaMap({
     let active = true;
     let map: GoogleMap | null = null;
     let markers: GoogleMarker[] = [];
+    let infoWindow: GoogleInfoWindow | null = null;
 
     if (!apiKey) {
       onRecenterReady(() => {});
@@ -110,6 +117,7 @@ export default function SriLankaMap({
           fullscreenControl: false,
         });
         const createdMap = map;
+        infoWindow = new maps.InfoWindow({ maxWidth: 280 });
         onRecenterReady(() => {
           createdMap.setCenter(sriLankaCenter);
           createdMap.setZoom(7);
@@ -120,7 +128,34 @@ export default function SriLankaMap({
             position: { lat: attraction.latitude, lng: attraction.longitude },
             title: attraction.name,
           });
-          maps.event.addListener(marker, 'click', () => onAttractionPress(attraction.id));
+          maps.event.addListener(marker, 'click', () => {
+            const content = document.createElement('div');
+            const title = document.createElement('strong');
+            title.textContent = attraction.name;
+            content.appendChild(title);
+
+            const details = [attraction.location, attraction.category].filter(Boolean).join(' · ');
+            if (details) {
+              const location = document.createElement('p');
+              location.textContent = details;
+              content.appendChild(location);
+            }
+
+            if (attraction.description) {
+              const description = document.createElement('p');
+              description.textContent = attraction.description;
+              content.appendChild(description);
+            }
+
+            const openButton = document.createElement('button');
+            openButton.type = 'button';
+            openButton.textContent = 'View attraction';
+            openButton.addEventListener('click', () => onAttractionPress(attraction.id));
+            content.appendChild(openButton);
+
+            infoWindow?.setContent(content);
+            infoWindow?.open({ map: createdMap, anchor: marker });
+          });
           return marker;
         });
       })
@@ -133,6 +168,7 @@ export default function SriLankaMap({
     return () => {
       active = false;
       markers.forEach((marker) => marker.setMap(null));
+      infoWindow = null;
       onRecenterReady(() => {});
     };
   }, [apiKey, attractions, onAttractionPress, onRecenterReady]);

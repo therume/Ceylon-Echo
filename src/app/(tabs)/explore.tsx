@@ -1,8 +1,10 @@
 import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { DataMessage } from '@/components/data-message';
+import SriLankaMap from '@/components/sri-lanka-map';
+import type { MappedAttraction } from '@/components/sri-lanka-map.types';
 import {
   AttractionCard,
   ScreenFrame,
@@ -27,6 +29,37 @@ export default function ExploreScreen() {
       }),
     [attractions, filter, search],
   );
+  const mappedAttractions: MappedAttraction[] = useMemo(
+    () =>
+      filteredAttractions.flatMap((attraction) => {
+        if (
+          typeof attraction.latitude !== 'number' ||
+          !Number.isFinite(attraction.latitude) ||
+          typeof attraction.longitude !== 'number' ||
+          !Number.isFinite(attraction.longitude)
+        ) {
+          return [];
+        }
+
+        return [
+          {
+            id: attraction.id,
+            name: attraction.name,
+            location: attraction.location,
+            category: attraction.category,
+            description: attraction.description,
+            latitude: attraction.latitude,
+            longitude: attraction.longitude,
+          },
+        ];
+      }),
+    [filteredAttractions],
+  );
+  const onAttractionPress = useCallback(
+    (id: string) => router.push({ pathname: '/(tabs)/attraction', params: { id } }),
+    [],
+  );
+  const onRecenterReady = useCallback(() => {}, []);
 
   return (
     <ScreenFrame
@@ -46,24 +79,19 @@ export default function ExploreScreen() {
       </View>
 
       <SectionHeading title="Explore the map" />
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => router.push('/(tabs)/map')}
-        style={styles.mapCard}>
-        <View style={styles.mapGrid} />
-        <View style={styles.mapRoadOne} />
-        <View style={styles.mapRoadTwo} />
-        <View style={styles.mapWater} />
-        <View style={[styles.mapPin, styles.pinOne]}>
-          <Text style={styles.pinText}>•</Text>
-        </View>
-        <View style={[styles.mapPin, styles.pinTwo]}>
-          <Text style={styles.pinText}>•</Text>
-        </View>
-        <View style={styles.mapAction}>
+      <View style={styles.mapCard}>
+        <SriLankaMap
+          attractions={mappedAttractions}
+          onAttractionPress={onAttractionPress}
+          onRecenterReady={onRecenterReady}
+        />
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push('/(tabs)/map')}
+          style={({ pressed }) => [styles.mapAction, pressed && styles.mapActionPressed]}>
           <Text style={styles.mapActionText}>Open interactive map  →</Text>
-        </View>
-      </Pressable>
+        </Pressable>
+      </View>
 
       <SectionHeading title="Nearby attractions" action="See all" onPress={() => router.push('/(tabs)/nearby')} />
       <View style={styles.filterRow}>
@@ -107,94 +135,47 @@ export default function ExploreScreen() {
 
 const styles = StyleSheet.create({
   search: {
-    minHeight: 40,
+    minHeight: 48,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
     borderWidth: 1,
     borderColor: TravelColors.border,
-    borderRadius: 11,
-    paddingHorizontal: 10,
+    borderRadius: 13,
+    paddingHorizontal: 13,
     backgroundColor: '#ffffff',
   },
-  searchIcon: { color: '#617167', fontSize: 20 },
-  searchInput: { flex: 1, color: TravelColors.ink, fontSize: 11 },
+  searchIcon: { color: '#617167', fontSize: 23 },
+  searchInput: { flex: 1, color: TravelColors.ink, fontSize: 13 },
   mapCard: {
-    height: 165,
+    height: 260,
     overflow: 'hidden',
     position: 'relative',
-    borderRadius: 13,
+    borderRadius: 16,
     backgroundColor: '#e3ece6',
   },
-  mapGrid: {
-    ...StyleSheet.absoluteFill,
-    opacity: 0.4,
-    backgroundColor: '#d9e4dc',
-  },
-  mapRoadOne: {
-    position: 'absolute',
-    top: -55,
-    left: '48%',
-    width: 17,
-    height: 280,
-    borderRadius: 20,
-    backgroundColor: '#fbfaf5',
-    transform: [{ rotate: '31deg' }],
-  },
-  mapRoadTwo: {
-    position: 'absolute',
-    top: '42%',
-    left: -20,
-    width: '120%',
-    height: 13,
-    borderRadius: 20,
-    backgroundColor: '#fbfaf5',
-    transform: [{ rotate: '-8deg' }],
-  },
-  mapWater: {
-    position: 'absolute',
-    top: -10,
-    right: -26,
-    width: 105,
-    height: 105,
-    borderRadius: 55,
-    backgroundColor: '#c3d9d6',
-  },
-  mapPin: {
-    position: 'absolute',
-    width: 26,
-    height: 26,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: '#ffffff',
-    borderRadius: 14,
-    backgroundColor: TravelColors.orange,
-  },
-  pinOne: { left: '35%', top: '34%' },
-  pinTwo: { right: '28%', bottom: '30%', backgroundColor: TravelColors.green },
-  pinText: { color: '#ffffff', fontSize: 14, lineHeight: 16 },
   mapAction: {
     position: 'absolute',
     right: 10,
     bottom: 10,
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    borderRadius: 22,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
     backgroundColor: '#ffffff',
   },
-  mapActionText: { color: TravelColors.green, fontSize: 10, fontWeight: '700' },
-  filterRow: { flexDirection: 'row', gap: 7, marginBottom: 10 },
+  mapActionPressed: { opacity: 0.8 },
+  mapActionText: { color: TravelColors.green, fontSize: 11, fontWeight: '700' },
+  filterRow: { flexDirection: 'row', gap: 8, marginBottom: 12 },
   filter: {
     borderWidth: 1,
     borderColor: TravelColors.border,
     borderRadius: 18,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingHorizontal: 13,
+    paddingVertical: 9,
     backgroundColor: '#ffffff',
   },
   filterActive: { borderColor: TravelColors.green, backgroundColor: TravelColors.green },
-  filterText: { color: TravelColors.muted, fontSize: 9, fontWeight: '600' },
+  filterText: { color: TravelColors.muted, fontSize: 10, fontWeight: '600' },
   filterTextActive: { color: '#ffffff' },
   cardList: { gap: 10 },
 });

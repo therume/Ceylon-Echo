@@ -31,6 +31,8 @@ export default function InteractiveMapScreen() {
             id: attraction.id,
             name: attraction.name,
             location: attraction.location,
+            category: attraction.category,
+            description: attraction.description,
             latitude: attraction.latitude,
             longitude: attraction.longitude,
           },
@@ -59,8 +61,8 @@ export default function InteractiveMapScreen() {
           <Text style={styles.locateText}>◎</Text>
         </Pressable>
         <View style={styles.mapLegend}>
-          <Text style={styles.legendTitle}>Cultural Triangle</Text>
-          <Text style={styles.legendSubtitle}>{attractions.length} attractions</Text>
+          <Text style={styles.legendTitle}>Explore Sri Lanka</Text>
+          <Text style={styles.legendSubtitle}>{mappedAttractions.length} mapped destinations</Text>
         </View>
       </View>
       {isLoading ? <DataMessage isLoading message="Loading map attractions…" /> : null}
@@ -94,10 +96,10 @@ export default function InteractiveMapScreen() {
 
 const styles = StyleSheet.create({
   map: {
-    height: 320,
+    height: 380,
     overflow: 'hidden',
     position: 'relative',
-    borderRadius: 15,
+    borderRadius: 18,
     backgroundColor: '#eaf0e8',
   },
   locateButton: {
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
     height: 34,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 12,
     backgroundColor: '#ffffff',
   },
   locateText: { color: TravelColors.green, fontSize: 17 },
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
   legendTitle: { color: TravelColors.ink, fontSize: 10, fontWeight: '700' },
   legendSubtitle: { marginTop: 3, color: TravelColors.muted, fontSize: 8 },
   placeRow: {
-    minHeight: 54,
+    minHeight: 64,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
@@ -142,8 +144,8 @@ const styles = StyleSheet.create({
   placePinAlt: { backgroundColor: TravelColors.green },
   placePinText: { color: '#ffffff', fontSize: 10, fontWeight: '700' },
   placeCopy: { flex: 1 },
-  placeTitle: { color: TravelColors.ink, fontSize: 10, fontWeight: '700' },
-  placeDistance: { marginTop: 3, color: TravelColors.muted, fontSize: 8 },
-  chevron: { color: TravelColors.green, fontSize: 18 },
-  button: { marginTop: 15 },
+  placeTitle: { color: TravelColors.ink, fontSize: 12, fontWeight: '700' },
+  placeDistance: { marginTop: 4, color: TravelColors.muted, fontSize: 10 },
+  chevron: { color: TravelColors.green, fontSize: 20 },
+  button: { marginTop: 18 },
 });

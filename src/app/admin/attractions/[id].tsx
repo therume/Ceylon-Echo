@@ -417,9 +417,9 @@ function getContentType(provided: string | null | undefined, name: string, fallb
 
 const styles = StyleSheet.create({
   content: {
-    padding: 20,
-    paddingBottom: 36,
-    gap: 17,
+    padding: 22,
+    paddingBottom: 42,
+    gap: 18,
   },
   centered: {
     flex: 1,
@@ -445,13 +445,13 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   photoItem: {
-    width: 66,
-    height: 66,
+    width: 78,
+    height: 78,
   },
   photoImage: {
-    width: 66,
-    height: 66,
-    borderRadius: 7,
+    width: 78,
+    height: 78,
+    borderRadius: 11,
     backgroundColor: adminColors.line,
   },
   removeMedia: {
@@ -471,11 +471,11 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   addPhoto: {
-    width: 66,
-    height: 66,
+    width: 78,
+    height: 78,
     borderWidth: 1,
     borderColor: adminColors.line,
-    borderRadius: 7,
+    borderRadius: 11,
     backgroundColor: adminColors.surface,
     justifyContent: 'center',
     alignItems: 'center',
@@ -493,13 +493,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   uploadButton: {
-    minHeight: 44,
+    minHeight: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
     borderStyle: 'dashed',
     borderColor: adminColors.rust,
-    borderRadius: 7,
+    borderRadius: 10,
     backgroundColor: adminColors.surface,
   },
   uploadText: {

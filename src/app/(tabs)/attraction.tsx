@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { Image } from 'expo-image';
 
 import { DataMessage } from '@/components/data-message';
 import {
@@ -29,6 +30,7 @@ export default function AttractionScreen() {
   } | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [failedPhotoUrl, setFailedPhotoUrl] = useState<string | null>(null);
   const saved =
     savedState?.userId === user?.uid &&
     savedState?.attractionId === selectedId &&
@@ -117,12 +119,14 @@ export default function AttractionScreen() {
 
   return (
     <ScreenFrame title={attraction.name} subtitle={attraction.location}>
-      {attraction.photos[0]?.url ? (
+      {attraction.photos[0]?.url && failedPhotoUrl !== attraction.photos[0].url ? (
         <Image
           accessibilityLabel={`${attraction.name} photo`}
-          resizeMode="cover"
+          contentFit="cover"
+          onError={() => setFailedPhotoUrl(attraction.photos[0]?.url ?? null)}
           source={{ uri: attraction.photos[0].url }}
           style={styles.heroArt}
+          transition={200}
         />
       ) : (
         <LandscapeArt
@@ -188,7 +192,7 @@ export default function AttractionScreen() {
 }
 
 const styles = StyleSheet.create({
-  heroArt: { height: 185, borderRadius: 13, width: '100%' },
+  heroArt: { height: 230, borderRadius: 16, width: '100%' },
   tagRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -196,14 +200,14 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   rating: { color: '#a36b34', fontSize: 10, fontWeight: '700' },
-  description: { marginTop: 10, color: TravelColors.muted, fontSize: 11, lineHeight: 17 },
-  buttonRow: { flexDirection: 'row', gap: 8, marginTop: 10 },
+  description: { marginTop: 12, color: TravelColors.muted, fontSize: 13, lineHeight: 21 },
+  buttonRow: { flexDirection: 'row', gap: 10, marginTop: 12 },
   flexButton: { flex: 1 },
   saveButton: { minWidth: 95 },
   sectionTitle: {
     marginTop: 20,
     color: '#26382f',
-    fontSize: 14,
+    fontSize: 17,
     fontWeight: '700',
   },
 });

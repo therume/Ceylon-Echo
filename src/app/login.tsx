@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Image } from 'expo-image';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -84,26 +85,33 @@ export default function LoginScreen() {
           ]}
           keyboardShouldPersistTaps="handled">
           <View style={styles.content}>
-            <Text
-              style={[
-                styles.title,
-                { marginBottom: Math.max(height * 0.07, 30) },
-              ]}>
+            <View style={styles.brand}>
+              <View style={styles.brandMark}>
+                <Text style={styles.brandMarkText}>CE</Text>
+              </View>
+              <View>
+                <Text style={styles.brandName}>CEYLON ECHO</Text>
+                <Text style={styles.brandCaption}>A SRI LANKAN JOURNEY</Text>
+              </View>
+            </View>
+            <Text style={[styles.title, { marginBottom: Math.max(height * 0.035, 18) }]}>
               Access Portal
             </Text>
 
-            <View style={[styles.imageRow, { height: Math.min(height * 0.125, 120) }]}>
-              <View
-                accessible
-                accessibilityRole="image"
-                accessibilityLabel="Landscape photo asset required"
+            <View style={[styles.imageRow, { height: Math.min(Math.max(height * 0.17, 132), 172) }]}>
+              <Image
+                accessibilityLabel="Sri Lankan stilt fishermen at sunset"
+                contentFit="cover"
+                source={require('../../assets/images/stilt-fishermen.png')}
                 style={[styles.photoPlaceholder, styles.firstPhoto]}
+                transition={250}
               />
-              <View
-                accessible
-                accessibilityRole="image"
-                accessibilityLabel="Sri Lankan heritage photo asset required"
+              <Image
+                accessibilityLabel="Sri Lankan coastline and fishing boats"
+                contentFit="cover"
+                source={require('../../assets/images/sri-lanka-coast.png')}
                 style={[styles.photoPlaceholder, styles.secondPhoto]}
+                transition={250}
               />
             </View>
 
@@ -295,79 +303,120 @@ const styles = StyleSheet.create({
   content: {
     width: '100%',
     flexGrow: 1,
-    maxWidth: 420,
+    maxWidth: 480,
+  },
+  brand: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 11,
+    marginBottom: 19,
+  },
+  brandMark: {
+    width: 42,
+    height: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 13,
+    backgroundColor: '#285944',
+  },
+  brandMarkText: {
+    color: '#ffffff',
+    fontFamily: 'serif',
+    fontSize: 14,
+    fontWeight: '700',
+    letterSpacing: 0.7,
+  },
+  brandName: {
+    color: '#26382f',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 1.6,
+  },
+  brandCaption: {
+    marginTop: 4,
+    color: '#85877f',
+    fontSize: 8,
+    fontWeight: '600',
+    letterSpacing: 1.1,
   },
   title: {
-    color: '#294e3e',
+    color: '#26382f',
     fontFamily: 'serif',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 26,
+    fontWeight: '700',
     textAlign: 'center',
   },
   imageRow: {
     flexDirection: 'row',
-    gap: 6,
+    gap: 9,
     overflow: 'hidden',
-    borderRadius: 5,
+    borderRadius: 16,
   },
   photoPlaceholder: {
     flex: 1,
     overflow: 'hidden',
-    borderRadius: 3,
+    borderRadius: 12,
   },
-  firstPhoto: {
-    backgroundColor: '#e7e3d9',
-  },
-  secondPhoto: {
-    backgroundColor: '#e2e5df',
-  },
+  firstPhoto: { backgroundColor: '#e7e3d9' },
+  secondPhoto: { backgroundColor: '#e2e5df' },
   modeSelector: {
     flexDirection: 'row',
-    gap: 6,
-    padding: 4,
-    borderRadius: 10,
-    backgroundColor: '#eee9dc',
+    gap: 7,
+    padding: 5,
+    borderRadius: 13,
+    backgroundColor: '#eeece4',
   },
   modeButton: {
-    minHeight: 38,
+    minHeight: 44,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
-    paddingHorizontal: 8,
+    borderRadius: 10,
+    paddingHorizontal: 10,
   },
   modeButtonSelected: {
-    backgroundColor: '#294e3e',
+    backgroundColor: '#285944',
   },
   modeText: {
-    color: '#777267',
+    color: '#777d75',
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   modeTextSelected: {
     color: '#ffffff',
   },
   form: {
     flexGrow: 1,
+    padding: 18,
+    borderWidth: 1,
+    borderColor: '#e8e7df',
+    borderRadius: 16,
+    backgroundColor: '#ffffff',
+    shadowColor: '#26382f',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    elevation: 2,
   },
   label: {
     marginBottom: 4,
     color: '#45433d',
-    fontSize: 11,
-    fontWeight: '600',
+    fontSize: 12,
+    fontWeight: '700',
   },
   passwordLabel: {
     marginTop: 10,
   },
   input: {
-    minHeight: 40,
+    minHeight: 46,
     borderWidth: 1,
-    borderColor: '#e4e0d8',
-    borderRadius: 7,
-    paddingHorizontal: 10,
+    borderColor: '#e3e4dc',
+    borderRadius: 10,
+    paddingHorizontal: 12,
     color: '#383731',
     backgroundColor: '#ffffff',
-    fontSize: 12,
+    fontSize: 13,
   },
   message: {
     marginTop: 8,
@@ -382,11 +431,11 @@ const styles = StyleSheet.create({
     lineHeight: 17,
   },
   submitButton: {
-    minHeight: 42,
+    minHeight: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
-    backgroundColor: '#b75f3e',
+    borderRadius: 11,
+    backgroundColor: '#285944',
   },
   disabled: {
     opacity: 0.65,
@@ -396,8 +445,8 @@ const styles = StyleSheet.create({
   },
   submitText: {
     color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '700',
   },
   switchMode: {
     alignItems: 'center',

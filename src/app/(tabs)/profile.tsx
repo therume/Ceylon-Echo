@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'expo-image';
+import { Feather } from '@expo/vector-icons';
 import {
   ActivityIndicator,
   Pressable,
@@ -15,7 +16,6 @@ import { AuthGate } from '@/components/auth-gate';
 import { DataMessage } from '@/components/data-message';
 import {
   DetailRow,
-  PrimaryButton,
   ScreenFrame,
   SectionHeading,
   TravelColors,
@@ -260,7 +260,7 @@ function AuthenticatedProfileScreen() {
               maxLength={100}
               onChangeText={setEditedName}
               placeholder="Your name"
-              placeholderTextColor="#f5ded3"
+              placeholderTextColor={TravelColors.muted}
               returnKeyType="done"
               style={styles.nameInput}
               value={editedName}
@@ -273,19 +273,6 @@ function AuthenticatedProfileScreen() {
             {memberYear ? `Explorer since ${memberYear}` : 'Ceylon Echo explorer'}
           </Text>
         </View>
-        {!isEditing ? (
-          <Pressable
-            accessibilityRole="button"
-            disabled={isLoading || isSaving}
-            onPress={startEditing}
-            style={({ pressed }) => [
-              styles.editProfileButton,
-              pressed && styles.pressed,
-              (isLoading || isSaving) && styles.disabled,
-            ]}>
-            <Text style={styles.editProfileText}>Edit Profile</Text>
-          </Pressable>
-        ) : null}
       </View>
       {isEditing ? (
         <View style={styles.editActions}>
@@ -317,6 +304,39 @@ function AuthenticatedProfileScreen() {
           </Pressable>
         </View>
       ) : null}
+
+      <SectionHeading title="Account" />
+      <View style={styles.accountCard}>
+        <ProfileActionRow
+          icon="user"
+          title="Edit Profile"
+          subtitle="Update your name and profile photo"
+          disabled={isLoading || isSaving}
+          onPress={startEditing}
+        />
+        <ProfileActionRow
+          icon="globe"
+          title="Language"
+          subtitle="Choose your preferred language"
+          onPress={() => router.push('/language')}
+        />
+        <ProfileActionRow
+          icon="settings"
+          title="Settings"
+          subtitle="Manage your travel interests"
+          onPress={() => router.push('/preferences')}
+        />
+        <ProfileActionRow
+          icon="log-out"
+          title={isSigningOut ? 'Signing out…' : 'Logout'}
+          subtitle="Sign out of your Ceylon Echo account"
+          destructive
+          disabled={isSigningOut}
+          onPress={() => void handleSignOut()}
+          isLoading={isSigningOut}
+          isLast
+        />
+      </View>
 
       <SectionHeading
         title="Your Saved Places"
@@ -353,49 +373,91 @@ function AuthenticatedProfileScreen() {
         onPress={() => router.push('/(tabs)/explore')}
       />
 
-      <PrimaryButton
-        title="Edit travel preferences"
-        onPress={() => router.push('/preferences')}
-        style={styles.preferencesButton}
-      />
-      <PrimaryButton
-        title={isSigningOut ? 'Signing out…' : 'Sign out'}
-        disabled={isSigningOut}
-        onPress={() => void handleSignOut()}
-        style={styles.signOutButton}
-      />
     </ScreenFrame>
+  );
+}
+
+function ProfileActionRow({
+  icon,
+  title,
+  subtitle,
+  onPress,
+  disabled = false,
+  destructive = false,
+  isLoading = false,
+  isLast = false,
+}: {
+  icon: 'user' | 'globe' | 'settings' | 'log-out';
+  title: string;
+  subtitle: string;
+  onPress: () => void;
+  disabled?: boolean;
+  destructive?: boolean;
+  isLoading?: boolean;
+  isLast?: boolean;
+}) {
+  const color = destructive ? TravelColors.orange : TravelColors.green;
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      disabled={disabled}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.accountRow,
+        !isLast && styles.accountRowDivider,
+        pressed && !disabled && styles.pressed,
+        disabled && styles.disabled,
+      ]}>
+      <View style={[styles.accountIcon, destructive && styles.accountIconDestructive]}>
+        {isLoading ? (
+          <ActivityIndicator size="small" color={color} />
+        ) : (
+          <Feather color={color} name={icon} size={16} />
+        )}
+      </View>
+      <View style={styles.accountCopy}>
+        <Text style={[styles.accountTitle, destructive && styles.accountTitleDestructive]}>
+          {title}
+        </Text>
+        <Text style={styles.accountSubtitle}>{subtitle}</Text>
+      </View>
+      {!isLoading ? <Feather color="#9aa199" name="chevron-right" size={17} /> : null}
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   profileCard: {
-    minHeight: 104,
+    minHeight: 112,
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 13,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    gap: 11,
-    backgroundColor: TravelColors.orange,
+    borderWidth: 1,
+    borderColor: TravelColors.border,
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 15,
+    gap: 13,
+    backgroundColor: TravelColors.surface,
   },
   avatarWrap: {
     position: 'relative',
-    width: 76,
-    height: 76,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatar: {
     width: 72,
     height: 72,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  avatar: {
+    width: 68,
+    height: 68,
+    alignItems: 'center',
+    justifyContent: 'center',
     overflow: 'hidden',
     borderWidth: 2.5,
-    borderColor: 'rgba(255,255,255,0.88)',
+    borderColor: '#ffffff',
     borderRadius: 36,
-    backgroundColor: '#8d553f',
+    backgroundColor: TravelColors.green,
   },
   avatarImage: {
     width: '100%',
@@ -411,7 +473,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: TravelColors.orange,
+    borderColor: TravelColors.surface,
     borderRadius: 15,
     backgroundColor: TravelColors.green,
   },
@@ -419,35 +481,53 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   profileCopy: { flex: 1, minWidth: 0 },
-  name: { color: '#ffffff', fontSize: 13, fontWeight: '700' },
+  name: { color: TravelColors.ink, fontFamily: 'serif', fontSize: 17, fontWeight: '700' },
   nameInput: {
     minHeight: 36,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.65)',
+    borderColor: TravelColors.border,
     borderRadius: 8,
     paddingHorizontal: 9,
     paddingVertical: 5,
-    color: '#ffffff',
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    fontSize: 13,
+    color: TravelColors.ink,
+    backgroundColor: TravelColors.background,
+    fontSize: 14,
     fontWeight: '700',
   },
-  email: { marginTop: 3, color: '#fff4ed', fontSize: 9 },
-  member: { marginTop: 5, color: '#ffe6d8', fontSize: 8 },
-  editProfileButton: {
-    minHeight: 33,
-    justifyContent: 'center',
+  email: { marginTop: 4, color: TravelColors.muted, fontSize: 10 },
+  member: { marginTop: 6, color: TravelColors.gold, fontSize: 10, fontWeight: '600' },
+  accountCard: {
+    overflow: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.72)',
-    borderRadius: 9,
-    paddingHorizontal: 9,
-    backgroundColor: 'rgba(255,255,255,0.12)',
+    borderColor: TravelColors.border,
+    borderRadius: 14,
+    backgroundColor: TravelColors.surface,
   },
-  editProfileText: {
-    color: '#ffffff',
-    fontSize: 9,
-    fontWeight: '700',
+  accountRow: {
+    minHeight: 68,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 13,
+    paddingVertical: 10,
   },
+  accountRowDivider: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0efe9',
+  },
+  accountIcon: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 11,
+    backgroundColor: TravelColors.greenLight,
+  },
+  accountIconDestructive: { backgroundColor: TravelColors.orangeLight },
+  accountCopy: { flex: 1, minWidth: 0 },
+  accountTitle: { color: TravelColors.ink, fontSize: 11, fontWeight: '700' },
+  accountTitleDestructive: { color: TravelColors.orange },
+  accountSubtitle: { marginTop: 3, color: TravelColors.muted, fontSize: 9 },
   editActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -495,6 +575,4 @@ const styles = StyleSheet.create({
     color: TravelColors.muted,
     fontSize: 10,
   },
-  preferencesButton: { marginTop: 20 },
-  signOutButton: { marginTop: 9, backgroundColor: TravelColors.green },
 });

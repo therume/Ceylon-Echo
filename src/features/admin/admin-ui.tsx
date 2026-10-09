@@ -3,14 +3,15 @@ import type { TextInputProps, ViewStyle } from 'react-native';
 import { Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export const adminColors = {
-  background: '#F7F5F1',
+  background: '#F8F7F2',
   surface: '#FFFFFF',
-  text: '#1D2830',
-  muted: '#7C8284',
-  line: '#E8E4DE',
-  green: '#2D5140',
-  rust: '#B95C38',
-  rustLight: '#FBF0EA',
+  text: '#26382F',
+  muted: '#777D75',
+  line: '#E8E7DF',
+  green: '#285944',
+  rust: '#BC603E',
+  rustLight: '#F7ECE6',
+  gold: '#B8860B',
 };
 
 export function AdminScreen({ children }: { children: ReactNode }) {
@@ -113,10 +114,10 @@ const styles = StyleSheet.create({
     backgroundColor: adminColors.background,
   },
   header: {
-    minHeight: 52,
-    paddingHorizontal: 20,
+    minHeight: 62,
+    paddingHorizontal: 22,
     backgroundColor: adminColors.surface,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: 1,
     borderBottomColor: adminColors.line,
     flexDirection: 'row',
     alignItems: 'center',
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: adminColors.text,
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '700',
   },
   headerActions: {
@@ -134,13 +135,13 @@ const styles = StyleSheet.create({
   },
   headerAction: {
     backgroundColor: adminColors.rust,
-    borderRadius: 6,
+    borderRadius: 9,
     paddingHorizontal: 14,
     paddingVertical: 8,
   },
   deleteAction: {
     backgroundColor: adminColors.rustLight,
-    borderRadius: 6,
+    borderRadius: 9,
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
@@ -158,8 +159,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   button: {
-    minHeight: 46,
-    borderRadius: 8,
+    minHeight: 48,
+    borderRadius: 10,
     paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
@@ -190,12 +191,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   input: {
-    minHeight: 42,
+    minHeight: 48,
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderWidth: 1,
     borderColor: adminColors.line,
-    borderRadius: 6,
+    borderRadius: 10,
     backgroundColor: adminColors.surface,
     color: adminColors.text,
     fontSize: 14,

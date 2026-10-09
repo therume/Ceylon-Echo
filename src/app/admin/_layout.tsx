@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { router, Stack, useSegments } from 'expo-router';
+import { useReducedMotion } from 'react-native-reanimated';
 
 import { AdminAuthProvider, useAdminAuth } from '@/features/admin/admin-auth';
 import { AdminProvider } from '@/features/admin/admin-context';
@@ -16,6 +17,7 @@ export default function AdminLayout() {
 
 function AdminRoutes() {
   const { user, isAdmin, isLoading } = useAdminAuth();
+  const reducedMotion = useReducedMotion();
   const segments = useSegments();
   const isLoginRoute = segments[1] !== 'attractions';
 
@@ -40,7 +42,15 @@ function AdminRoutes() {
     );
   }
 
-  const stack = <Stack screenOptions={{ headerShown: false }} />;
+  const stack = (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animation: reducedMotion ? 'none' : 'fade',
+        animationDuration: 220,
+      }}
+    />
+  );
   return user && isAdmin ? <AdminProvider key={user.uid}>{stack}</AdminProvider> : stack;
 }
 

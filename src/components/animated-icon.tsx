@@ -1,8 +1,8 @@
 import { Image } from 'expo-image';
 import * as SplashScreen from 'expo-splash-screen';
 import { useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import Animated, { Easing, Keyframe } from 'react-native-reanimated';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import Animated, { Easing, FadeIn, Keyframe, useReducedMotion } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
 const INITIAL_SCALE_FACTOR = Dimensions.get('screen').height / 90;
@@ -11,50 +11,44 @@ const DURATION = 600;
 export function AnimatedSplashOverlay() {
   const [animate, setAnimate] = useState(false);
   const [visible, setVisible] = useState(true);
+  const reducedMotion = useReducedMotion();
 
   if (!visible) return null;
 
-  const splashKeyframe = new Keyframe({
-    0: {
-      transform: [{ scale: 1 }],
-      opacity: 1,
-    },
-    20: {
-      opacity: 1,
-    },
-    70: {
-      opacity: 0,
-      easing: Easing.elastic(0.7),
-    },
-    100: {
-      opacity: 0,
-      transform: [{ scale: 1 }],
-      easing: Easing.elastic(0.7),
-    },
-  });
-
-  const image = <Image style={styles.image} source={require('@/assets/images/expo-logo.png')} />;
+  const brand = (
+    <View style={styles.splashBrand}>
+      <View style={styles.splashMark}>
+        <Text style={styles.splashMarkText}>CE</Text>
+      </View>
+      <Text style={styles.splashBrandName}>CEYLON ECHO</Text>
+      <Text style={styles.splashBrandCaption}>A SRI LANKAN JOURNEY</Text>
+    </View>
+  );
 
   return animate ? (
     <Animated.View
-      entering={splashKeyframe.duration(DURATION).withCallback((finished) => {
+      entering={FadeIn.duration(220).withCallback((finished) => {
         'worklet';
         if (finished) {
           scheduleOnRN(setVisible, false);
         }
       })}
       style={styles.splashOverlay}>
-      {image}
+      {brand}
     </Animated.View>
   ) : (
     <View
       onLayout={() => {
         SplashScreen.hideAsync().finally(() => {
-          setAnimate(true);
+          if (reducedMotion) {
+            setVisible(false);
+          } else {
+            setAnimate(true);
+          }
         });
       }}
       style={styles.splashOverlay}>
-      {image}
+      {brand}
     </View>
   );
 }
@@ -140,9 +134,43 @@ const styles = StyleSheet.create({
   },
   splashOverlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: '#208AEF',
+    backgroundColor: '#285944',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1000,
+  },
+  splashBrand: {
+    alignItems: 'center',
+  },
+  splashMark: {
+    width: 76,
+    height: 76,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#d7bd82',
+    borderRadius: 24,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+  splashMarkText: {
+    color: '#f2dca4',
+    fontFamily: 'serif',
+    fontSize: 25,
+    fontWeight: '700',
+    letterSpacing: 1,
+  },
+  splashBrandName: {
+    marginTop: 15,
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 2.4,
+  },
+  splashBrandCaption: {
+    marginTop: 5,
+    color: '#e7d9b5',
+    fontSize: 8,
+    fontWeight: '600',
+    letterSpacing: 1.4,
   },
 });

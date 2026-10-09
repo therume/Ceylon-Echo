@@ -54,7 +54,7 @@ export default function AdminLoginScreen() {
           <Text style={styles.brandName}>Ceylon Echo</Text>
           <Text style={styles.brandCaption}>Staff & Curator Portal</Text>
           <View style={styles.brandMark}>
-            <Text style={styles.brandMarkText}>♧</Text>
+            <Text style={styles.brandMarkText}>CE</Text>
           </View>
         </View>
 
@@ -134,31 +134,37 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   brandMark: {
-    width: 54,
-    height: 54,
+    width: 58,
+    height: 58,
     marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 7,
+    borderRadius: 16,
     backgroundColor: adminColors.green,
   },
   brandMarkText: {
     color: '#FFFFFF',
-    fontSize: 34,
-    lineHeight: 42,
+    fontFamily: 'serif',
+    fontSize: 17,
+    fontWeight: '700',
   },
   card: {
-    gap: 16,
-    padding: 20,
-    borderRadius: 12,
+    gap: 17,
+    padding: 22,
+    borderRadius: 17,
     backgroundColor: adminColors.surface,
     borderWidth: 1,
-    borderColor: '#EEEAE4',
+    borderColor: adminColors.line,
+    shadowColor: adminColors.text,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    elevation: 3,
   },
   title: {
     marginBottom: 1,
     color: adminColors.text,
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
   },
   error: {

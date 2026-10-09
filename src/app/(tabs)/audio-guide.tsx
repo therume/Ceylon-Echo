@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
+import { Image } from 'expo-image';
 
 import { DataMessage } from '@/components/data-message';
 import { LandscapeArt, ScreenFrame, TravelColors } from '@/components/travel-ui';
@@ -39,11 +40,21 @@ export default function AudioGuideScreen() {
     <ScreenFrame
       title="Audio Guide"
       subtitle={attraction?.name ?? 'Listen to a story from Sri Lanka'}>
-      <LandscapeArt
-        tone="forest"
-        label={attraction ? `${attraction.name} audio guide` : 'Audio guide illustration'}
-        style={styles.cover}
-      />
+      {attraction?.photos[0]?.url ? (
+        <Image
+          accessibilityLabel={`${attraction.name} audio guide destination`}
+          contentFit="cover"
+          source={{ uri: attraction.photos[0].url }}
+          style={styles.cover}
+          transition={200}
+        />
+      ) : (
+        <LandscapeArt
+          tone="forest"
+          label={attraction ? `${attraction.name} audio guide` : 'Audio guide illustration'}
+          style={styles.cover}
+        />
+      )}
       {isLoading ? <DataMessage isLoading message="Loading audio guides…" /> : null}
       {error ? <DataMessage isError message={error} /> : null}
       {!isLoading && !error && !attraction?.audioGuide ? (
@@ -75,24 +86,24 @@ export default function AudioGuideScreen() {
 }
 
 const styles = StyleSheet.create({
-  cover: { height: 200, borderRadius: 15 },
+  cover: { height: 240, borderRadius: 16 },
   guideTitle: {
     marginTop: 17,
     color: TravelColors.ink,
     fontFamily: 'serif',
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: '700',
     textAlign: 'center',
   },
   fileName: {
     marginTop: 5,
     color: TravelColors.muted,
-    fontSize: 10,
+    fontSize: 12,
     textAlign: 'center',
   },
   playButton: {
-    width: 52,
-    height: 52,
+    width: 60,
+    height: 60,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
@@ -100,8 +111,8 @@ const styles = StyleSheet.create({
     borderRadius: 26,
     backgroundColor: TravelColors.green,
   },
-  playIcon: { color: '#ffffff', fontSize: 18 },
-  status: { marginTop: 9, color: TravelColors.orange, fontSize: 9, textAlign: 'center' },
+  playIcon: { color: '#ffffff',   fontSize: 20 },
+  status: { marginTop: 10, color: TravelColors.orange, fontSize: 11, textAlign: 'center' },
   disabled: { opacity: 0.65 },
   pressed: { opacity: 0.8 },
 });

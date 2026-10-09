@@ -60,7 +60,6 @@ function parseAttraction(id: string, data: DocumentData): Attraction {
   if (
     typeof data.name !== 'string' ||
     typeof data.category !== 'string' ||
-    typeof data.description !== 'string' ||
     typeof data.location !== 'string' ||
     !isNullableNumber(data.latitude) ||
     !isNullableNumber(data.longitude) ||
@@ -71,17 +70,40 @@ function parseAttraction(id: string, data: DocumentData): Attraction {
     throw new Error(`Attraction "${id}" has invalid Firestore data.`);
   }
 
+  const description = parseDescription(data.description);
+
   return {
     id,
     name: data.name,
     category: data.category,
-    description: data.description,
+    description,
     location: data.location,
     latitude: data.latitude,
     longitude: data.longitude,
     photos: data.photos,
     audioGuide: data.audioGuide,
   };
+}
+
+function parseDescription(value: unknown): string {
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+    const localized = value as Record<string, unknown>;
+    if (typeof localized.en === 'string') {
+      return localized.en;
+    }
+    const fallback = Object.values(localized).find(
+      (description): description is string => typeof description === 'string',
+    );
+    if (fallback) {
+      return fallback;
+    }
+  }
+
+  throw new Error('Attraction description must be a string or contain localized text.');
 }
 
 function isNullableNumber(value: unknown): value is number | null {

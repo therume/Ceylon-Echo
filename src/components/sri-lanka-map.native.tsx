@@ -39,7 +39,13 @@ export default function SriLankaMap({
             longitude: attraction.longitude,
           }}
           title={attraction.name}
-          description={attraction.location}
+          description={[
+            attraction.location,
+            attraction.category,
+            attraction.description,
+          ]
+            .filter(Boolean)
+            .join(' · ')}
           onCalloutPress={() => onAttractionPress(attraction.id)}
         />
       ))}

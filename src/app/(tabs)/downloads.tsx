@@ -45,12 +45,14 @@ export default function AudioGuidesScreen() {
 
 const styles = StyleSheet.create({
   storageCard: {
-    borderRadius: 13,
-    padding: 14,
+    borderWidth: 1,
+    borderColor: TravelColors.border,
+    borderRadius: 16,
+    padding: 17,
     backgroundColor: '#f0f4ef',
   },
-  storageHeader: { flexDirection: 'row', justifyContent: 'space-between', gap: 8 },
-  storageTitle: { flex: 1, color: TravelColors.ink, fontSize: 11, fontWeight: '700' },
-  storageSize: { color: TravelColors.green, fontSize: 10, fontWeight: '600' },
-  storageNote: { marginTop: 7, color: TravelColors.muted, fontSize: 9, lineHeight: 14 },
+  storageHeader: { flexDirection: 'row', justifyContent: 'space-between', gap: 10 },
+  storageTitle: { flex: 1, color: TravelColors.ink, fontSize: 13, fontWeight: '700' },
+  storageSize: { color: TravelColors.green, fontSize: 11, fontWeight: '600' },
+  storageNote: { marginTop: 8, color: TravelColors.muted, fontSize: 11, lineHeight: 17 },
 });

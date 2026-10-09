@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react';
+import { Feather } from '@expo/vector-icons';
+import { Image } from 'expo-image';
+import { useState } from 'react';
 import {
   Pressable,
   ScrollView,
-  Image,
   StyleSheet,
   Text,
   View,
@@ -24,6 +26,8 @@ export const TravelColors = {
   orangeLight: '#f7ece6',
   border: '#e8e7df',
   paleBlue: '#eef3f2',
+  gold: '#b58a45',
+  goldLight: '#f5efdf',
 } as const;
 
 export function ScreenFrame({
@@ -41,10 +45,19 @@ export function ScreenFrame({
 }) {
   const pathname = usePathname();
   const insets = useSafeAreaInsets();
-  const activeTab = pathname.includes('explore')
-    ? 'explore'
-    : pathname.includes('profile')
-      ? 'profile'
+  const activeTab = pathname.includes('profile')
+    ? 'profile'
+    : [
+        'explore',
+        'map',
+        'nearby',
+        'suggested',
+        'bookmarks',
+        'downloads',
+        'attraction',
+        'audio-guide',
+      ].some((route) => pathname.includes(route))
+      ? 'explore'
       : 'home';
 
   return (
@@ -78,19 +91,19 @@ export function ScreenFrame({
       <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 7) }]}>
         <BottomBarButton
           active={activeTab === 'home'}
-          icon="⌂"
+          icon="home"
           label="Home"
           onPress={() => router.replace('/(tabs)/home')}
         />
         <BottomBarButton
           active={activeTab === 'explore'}
-          icon="⌕"
+          icon="map"
           label="Explore"
           onPress={() => router.replace('/(tabs)/explore')}
         />
         <BottomBarButton
           active={activeTab === 'profile'}
-          icon="○"
+          icon="user"
           label="Profile"
           onPress={() => router.replace('/(tabs)/profile')}
         />
@@ -106,7 +119,7 @@ function BottomBarButton({
   onPress,
 }: {
   active: boolean;
-  icon: string;
+  icon: 'home' | 'map' | 'user';
   label: string;
   onPress: () => void;
 }) {
@@ -116,7 +129,12 @@ function BottomBarButton({
       accessibilityState={{ selected: active }}
       onPress={onPress}
       style={({ pressed }) => [styles.bottomBarButton, pressed && styles.pressed]}>
-      <Text style={[styles.bottomBarIcon, active && styles.bottomBarActive]}>{icon}</Text>
+      <Feather
+        color={active ? TravelColors.green : '#79837b'}
+        name={icon}
+        size={18}
+        style={active && styles.bottomBarIconActive}
+      />
       <Text style={[styles.bottomBarLabel, active && styles.bottomBarActive]}>{label}</Text>
     </Pressable>
   );
@@ -223,6 +241,9 @@ export function AttractionCard({
   imageUrl?: string | null;
   onPress?: () => void;
 }) {
+  const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null);
+  const showImage = Boolean(imageUrl) && failedImageUrl !== imageUrl;
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -232,12 +253,14 @@ export function AttractionCard({
         compact && styles.attractionCardCompact,
         pressed && styles.pressed,
       ]}>
-      {imageUrl ? (
+      {showImage ? (
         <Image
           accessibilityLabel={`${title} photo`}
-          resizeMode="cover"
-          source={{ uri: imageUrl }}
+          contentFit="cover"
+          onError={() => setFailedImageUrl(imageUrl ?? null)}
+          source={{ uri: imageUrl ?? '' }}
           style={compact ? styles.compactArt : styles.cardArt}
+          transition={180}
         />
       ) : (
         <LandscapeArt tone={tone} style={compact ? styles.compactArt : styles.cardArt} />
@@ -312,114 +335,114 @@ const styles = StyleSheet.create({
   },
   content: {
     width: '100%',
-    maxWidth: 520,
+    maxWidth: 600,
     alignSelf: 'center',
-    paddingHorizontal: 18,
-    paddingTop: 10,
-    paddingBottom: 28,
+    paddingHorizontal: 20,
+    paddingTop: 14,
+    paddingBottom: 32,
   },
   brandHeader: {
-    minHeight: 34,
+    minHeight: 42,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 15,
+    marginBottom: 20,
   },
   brandIdentity: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 10,
   },
   brandMark: {
-    width: 25,
-    height: 25,
+    width: 34,
+    height: 34,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 7,
+    borderRadius: 11,
     backgroundColor: TravelColors.green,
   },
   brandMarkText: {
     color: '#ffffff',
     fontFamily: 'serif',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
   },
   brandName: {
     color: TravelColors.ink,
     fontFamily: 'serif',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
   },
   profileButton: {
-    width: 30,
-    height: 30,
+    width: 38,
+    height: 38,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 15,
-    backgroundColor: '#e6c8ae',
+    backgroundColor: TravelColors.goldLight,
   },
   profileButtonText: {
     color: TravelColors.green,
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '700',
   },
   screenTitle: {
     marginBottom: 4,
     color: TravelColors.ink,
     fontFamily: 'serif',
-    fontSize: 20,
+    fontSize: 26,
     fontWeight: '700',
   },
   screenSubtitle: {
     marginBottom: 16,
     color: TravelColors.muted,
-    fontSize: 12,
-    lineHeight: 17,
+    fontSize: 13,
+    lineHeight: 19,
   },
   sectionHeading: {
-    minHeight: 28,
+    minHeight: 34,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 19,
-    marginBottom: 8,
+    marginTop: 24,
+    marginBottom: 10,
   },
   sectionTitle: {
     color: TravelColors.ink,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
   },
   sectionAction: {
     color: TravelColors.green,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '600',
   },
   primaryButton: {
-    minHeight: 42,
+    minHeight: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 9,
+    borderRadius: 12,
     paddingHorizontal: 16,
     backgroundColor: TravelColors.orange,
   },
   primaryButtonText: {
     color: '#ffffff',
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '700',
   },
   softButton: {
-    minHeight: 36,
+    minHeight: 42,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: TravelColors.border,
-    borderRadius: 9,
+    borderRadius: 11,
     paddingHorizontal: 14,
     backgroundColor: TravelColors.surface,
   },
   softButtonText: {
     color: TravelColors.green,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '600',
   },
   pressed: {
@@ -468,26 +491,31 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: TravelColors.border,
-    borderRadius: 11,
+    borderRadius: 15,
     backgroundColor: TravelColors.surface,
+    shadowColor: TravelColors.ink,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
   },
   attractionCardCompact: {
-    width: 158,
-    marginRight: 10,
+    width: 184,
+    marginRight: 12,
   },
   cardArt: {
-    height: 112,
+    height: 148,
   },
   compactArt: {
-    height: 86,
+    height: 108,
   },
   cardDetails: {
-    minHeight: 50,
+    minHeight: 62,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
+    paddingHorizontal: 13,
+    paddingVertical: 10,
   },
   cardCopy: {
     flex: 1,
@@ -495,18 +523,18 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     color: TravelColors.ink,
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: '700',
   },
   cardLocation: {
     marginTop: 3,
     color: TravelColors.muted,
-    fontSize: 9,
+    fontSize: 10,
   },
   cardArrow: {
     color: TravelColors.green,
-    fontSize: 20,
-    lineHeight: 23,
+    fontSize: 22,
+    lineHeight: 25,
   },
   infoPill: {
     alignSelf: 'flex-start',
@@ -517,29 +545,29 @@ const styles = StyleSheet.create({
   },
   infoPillText: {
     color: TravelColors.green,
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: '600',
   },
   detailRow: {
-    minHeight: 57,
+    minHeight: 66,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#efeee8',
-    gap: 10,
-    paddingVertical: 7,
+    gap: 12,
+    paddingVertical: 9,
   },
   detailIcon: {
-    width: 34,
-    height: 34,
+    width: 40,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 9,
+    borderRadius: 12,
     backgroundColor: TravelColors.greenLight,
   },
   detailIconText: {
     color: TravelColors.green,
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
   },
   detailCopy: {
@@ -547,13 +575,13 @@ const styles = StyleSheet.create({
   },
   detailTitle: {
     color: TravelColors.ink,
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: '600',
   },
   detailSubtitle: {
     marginTop: 3,
     color: TravelColors.muted,
-    fontSize: 9,
+    fontSize: 10,
   },
   detailTrailing: {
     color: TravelColors.green,
@@ -561,30 +589,35 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   bottomBar: {
-    minHeight: 54,
+    minHeight: 62,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
     borderTopWidth: 1,
     borderTopColor: TravelColors.border,
-    paddingTop: 7,
+    paddingTop: 8,
     backgroundColor: '#ffffff',
+    shadowColor: TravelColors.ink,
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 8,
   },
   bottomBarButton: {
-    minWidth: 72,
+    minWidth: 82,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 2,
-  },
-  bottomBarIcon: {
-    color: '#79837b',
-    fontSize: 18,
-    lineHeight: 20,
+    gap: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 14,
+    borderRadius: 16,
   },
   bottomBarLabel: {
     color: '#79837b',
-    fontSize: 8,
+    fontSize: 10,
+    fontWeight: '600',
   },
+  bottomBarIconActive: { borderRadius: 12, backgroundColor: TravelColors.greenLight },
   bottomBarActive: {
     color: TravelColors.orange,
   },

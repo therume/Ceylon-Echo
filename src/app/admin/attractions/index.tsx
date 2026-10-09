@@ -104,8 +104,8 @@ export default function AttractionsListScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    padding: 18,
-    gap: 10,
+    padding: 22,
+    gap: 12,
   },
   searchRow: {
     flexDirection: 'row',
@@ -121,11 +121,11 @@ const styles = StyleSheet.create({
     fontSize: 19,
   },
   searchInput: {
-    height: 42,
+    height: 48,
     flex: 1,
     paddingLeft: 34,
     paddingRight: 10,
-    borderRadius: 7,
+    borderRadius: 10,
     backgroundColor: adminColors.surface,
     borderWidth: 1,
     borderColor: adminColors.line,
@@ -133,12 +133,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   addButton: {
-    height: 42,
+    height: 48,
     minWidth: 68,
     paddingHorizontal: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 7,
+    borderRadius: 10,
     backgroundColor: adminColors.rust,
   },
   addText: {
@@ -149,17 +149,17 @@ const styles = StyleSheet.create({
   sectionTitle: {
     marginBottom: 2,
     color: adminColors.text,
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '700',
   },
   attractionCard: {
-    minHeight: 66,
-    padding: 12,
+    minHeight: 76,
+    padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
     backgroundColor: adminColors.surface,
-    borderRadius: 9,
+    borderRadius: 13,
     borderWidth: 1,
     borderColor: adminColors.line,
   },

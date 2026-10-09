@@ -4,6 +4,8 @@ export type MappedAttraction = {
   location: string;
   latitude: number;
   longitude: number;
+  category?: string;
+  description?: string;
 };
 
 export type SriLankaMapProps = {
