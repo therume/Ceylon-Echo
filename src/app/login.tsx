@@ -135,18 +135,28 @@ export default function LoginScreen() {
           showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
             <View style={styles.brandHeader}>
-              <View style={styles.brand}>
-                <View style={styles.brandMark}>
-                  <Image
-                    accessibilityLabel="Ceylon Echo logo"
-                    contentFit="contain"
-                    source={require('../../assets/images/ce-logo.png')}
-                    style={styles.brandMarkImage}
-                  />
-                </View>
-                <View>
-                  <Text style={styles.brandName}>CEYLON ECHO</Text>
-                  <Text style={styles.brandCaption}>{t('journeyCaption')}</Text>
+              <View style={styles.brandHeaderLeft}>
+                <Pressable
+                  accessibilityLabel="Back to onboarding"
+                  accessibilityRole="button"
+                  hitSlop={8}
+                  onPress={() => router.replace('/')}
+                  style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}>
+                  <Feather color="#285944" name="arrow-left" size={19} />
+                </Pressable>
+                <View style={styles.brand}>
+                  <View style={styles.brandMark}>
+                    <Image
+                      accessibilityLabel="Ceylon Echo logo"
+                      contentFit="contain"
+                      source={require('../../assets/images/ce-logo.png')}
+                      style={styles.brandMarkImage}
+                    />
+                  </View>
+                  <View>
+                    <Text style={styles.brandName}>CEYLON ECHO</Text>
+                    <Text style={styles.brandCaption}>{t('journeyCaption')}</Text>
+                  </View>
                 </View>
               </View>
               <View style={styles.islandTag}>
@@ -493,6 +503,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 16,
+  },
+  brandHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 9,
+  },
+  backButton: {
+    width: 34,
+    height: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#e7e0d2',
+    borderRadius: 17,
+    backgroundColor: '#fcfbf7',
   },
   brand: {
     flexDirection: 'row',

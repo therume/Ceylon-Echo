@@ -1,6 +1,15 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Image, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import { useAdminAuth } from '@/features/admin/admin-auth';
 import { AdminButton, AdminField, AdminScreen, adminColors } from '@/features/admin/admin-ui';
@@ -50,6 +59,14 @@ export default function AdminLoginScreen() {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.container}>
+        <Pressable
+          accessibilityLabel="Back to onboarding"
+          accessibilityRole="button"
+          hitSlop={10}
+          onPress={() => router.replace('/')}
+          style={styles.backButton}>
+          <Feather color={adminColors.green} name="arrow-left" size={22} />
+        </Pressable>
         <View style={styles.brand}>
           <Text style={styles.brandName}>Ceylon Echo</Text>
           <Text style={styles.brandCaption}>Staff & Curator Portal</Text>
@@ -122,6 +139,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 22,
     paddingBottom: 28,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 12,
+    left: 22,
+    zIndex: 1,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: adminColors.line,
+    borderRadius: 20,
+    backgroundColor: adminColors.surface,
   },
   brand: {
     alignItems: 'center',

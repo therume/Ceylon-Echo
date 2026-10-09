@@ -45,6 +45,7 @@ type AttractionDetails = {
   location: string;
   description: string;
   imageUrl: string | null;
+  photoUrls: string[];
   audioUrl: string | null;
   duration: string;
   chapterCount: string;
@@ -85,6 +86,7 @@ export default function AttractionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
+  const galleryPageWidth = width - insets.left - insets.right;
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [attraction, setAttraction] = useState<AttractionDetails | null>(null);
@@ -92,6 +94,7 @@ export default function AttractionDetailScreen() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
 
   function toggleDescription() {
     if (Platform.OS === 'android') {
@@ -153,6 +156,7 @@ export default function AttractionDetailScreen() {
           title: `${attraction.title} Audio Guide - Chapter 1`,
           subtitle: attraction.category,
           imageUrl: attraction.imageUrl ?? '',
+          photoUrls: JSON.stringify(attraction.photoUrls),
         },
       });
     } catch (offlineError) {
@@ -188,6 +192,15 @@ export default function AttractionDetailScreen() {
         const audioGuide = isMediaWithUrl(data.audioGuide) ? data.audioGuide : null;
         const chapters = Array.isArray(data.chapters) ? data.chapters.length : undefined;
         const legacyAudioUrl = getText(data.audioUrl);
+        const imageUrl =
+          getText(data.imageUrl) ||
+          getText(data.image) ||
+          firstPhoto?.url ||
+          null;
+        const uploadedPhotoUrls = photos
+          .filter(isMediaWithUrl)
+          .map((photo) => photo.url)
+          .filter((url) => url.length > 0);
 
         if (isActive) {
           setAttraction({
@@ -197,11 +210,10 @@ export default function AttractionDetailScreen() {
             description:
               getLocalizedText(data.description, language) ||
               t('noDescription'),
-            imageUrl:
-              getText(data.imageUrl) ||
-              getText(data.image) ||
-              firstPhoto?.url ||
-              null,
+            imageUrl,
+            photoUrls: [...new Set([imageUrl, ...uploadedPhotoUrls].filter(
+              (url): url is string => Boolean(url),
+            ))],
             audioUrl:
               getLocalizedAudioUrl(data.audioUrl, language, audioGuide?.url ?? legacyAudioUrl) ||
               null,
@@ -210,6 +222,7 @@ export default function AttractionDetailScreen() {
               data.chapterCount ?? data.chaptersCount ?? chapters,
             ),
           });
+          setActivePhotoIndex(0);
         }
       } catch (fetchError) {
         if (isActive) {
@@ -268,15 +281,38 @@ export default function AttractionDetailScreen() {
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={[styles.hero, { height: width * 0.72 }]}>
-          {attraction.imageUrl && (
-            <Image
-              contentFit="cover"
-              source={{ uri: attraction.imageUrl }}
-              style={styles.heroImage}
-            />
-          )}
-          <View style={[styles.heroShade, { paddingTop: insets.top + 8 }]}>
+        <View style={[styles.hero, { height: galleryPageWidth * 0.72 }]}>
+          {attraction.photoUrls.length > 0 ? (
+            <ScrollView
+              horizontal
+              pagingEnabled
+              scrollEnabled={attraction.photoUrls.length > 1}
+              showsHorizontalScrollIndicator={false}
+              onMomentumScrollEnd={(event) => {
+                setActivePhotoIndex(
+                  Math.min(
+                    Math.round(event.nativeEvent.contentOffset.x / galleryPageWidth),
+                    attraction.photoUrls.length - 1,
+                  ),
+                );
+              }}>
+              {attraction.photoUrls.map((photoUrl, index) => (
+                <Image
+                  key={`${photoUrl}-${index}`}
+                  accessibilityLabel={`${attraction.title} photo ${index + 1} of ${attraction.photoUrls.length}`}
+                  contentFit="cover"
+                  source={{ uri: photoUrl }}
+                  style={[
+                    styles.heroImage,
+                    { width: galleryPageWidth, height: galleryPageWidth * 0.72 },
+                  ]}
+                />
+              ))}
+            </ScrollView>
+          ) : null}
+          <View
+            pointerEvents="box-none"
+            style={[styles.heroShade, { paddingTop: insets.top + 8 }]}>
             <View style={styles.heroHeader}>
               <Pressable
                 accessibilityLabel="Go back"
@@ -300,6 +336,22 @@ export default function AttractionDetailScreen() {
                 />
               </Pressable>
             </View>
+            {attraction.photoUrls.length > 1 ? (
+              <View pointerEvents="none" style={styles.photoIndicator}>
+                {attraction.photoUrls.map((photoUrl, index) => (
+                  <View
+                    key={`${photoUrl}-indicator`}
+                    style={[
+                      styles.photoDot,
+                      index === activePhotoIndex && styles.photoDotActive,
+                    ]}
+                  />
+                ))}
+                <Text style={styles.photoCount}>
+                  {activePhotoIndex + 1} / {attraction.photoUrls.length}
+                </Text>
+              </View>
+            ) : null}
           </View>
         </View>
 
@@ -439,7 +491,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.green,
   },
   heroImage: {
-    ...StyleSheet.absoluteFill,
+    backgroundColor: colors.green,
   },
   heroShade: {
     ...StyleSheet.absoluteFill,
@@ -450,6 +502,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  photoIndicator: {
+    position: 'absolute',
+    right: 16,
+    bottom: 12,
+    left: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5,
+  },
+  photoDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255,255,255,0.55)',
+  },
+  photoDotActive: {
+    width: 16,
+    backgroundColor: colors.white,
+  },
+  photoCount: {
+    marginLeft: 4,
+    color: colors.white,
+    fontSize: 10,
+    fontWeight: '700',
+    textShadowColor: 'rgba(0,0,0,0.55)',
+    textShadowRadius: 4,
   },
   heroIconButton: {
     width: 38,

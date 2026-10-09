@@ -14,6 +14,7 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -30,13 +31,35 @@ const colors = {
 const AUDIO_LOAD_TIMEOUT_MS = 30_000;
 
 export default function PlayerScreen() {
-  const { audioUrl, localAudioUrl, title, subtitle, imageUrl } = useLocalSearchParams<{
+  const { audioUrl, localAudioUrl, title, subtitle, imageUrl, photoUrls } = useLocalSearchParams<{
     audioUrl?: string;
     localAudioUrl?: string;
     title?: string;
     subtitle?: string;
     imageUrl?: string;
+    photoUrls?: string;
   }>();
+  const { width } = useWindowDimensions();
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+  const galleryUrls = useMemo(() => {
+    let parsedPhotoUrls: unknown = [];
+    if (photoUrls) {
+      try {
+        parsedPhotoUrls = JSON.parse(photoUrls);
+      } catch {
+        parsedPhotoUrls = [];
+      }
+    }
+    const uploadedPhotoUrls = Array.isArray(parsedPhotoUrls)
+      ? parsedPhotoUrls.filter(
+          (url): url is string => typeof url === 'string' && url.trim().length > 0,
+        )
+      : [];
+    return [...new Set([imageUrl, ...uploadedPhotoUrls].filter(
+      (url): url is string => Boolean(url),
+    ))];
+  }, [imageUrl, photoUrls]);
+  const coverWidth = Math.min((width - 40) * 0.84, 310);
   const remoteUri = useMemo(
     () => (audioUrl ? normalizeAudioUri(audioUrl) : null),
     [audioUrl],
@@ -211,13 +234,58 @@ export default function PlayerScreen() {
           </Pressable>
         </View>
 
-        {imageUrl ? (
-          <Image contentFit="cover" source={{ uri: imageUrl }} style={styles.coverImage} />
+        {galleryUrls.length > 0 ? (
+          <View style={[styles.coverGallery, { width: coverWidth, height: coverWidth }]}>
+            <ScrollView
+              horizontal
+              pagingEnabled
+              scrollEnabled={galleryUrls.length > 1}
+              showsHorizontalScrollIndicator={false}
+              onMomentumScrollEnd={(event) => {
+                setActivePhotoIndex(
+                  Math.min(
+                    Math.round(event.nativeEvent.contentOffset.x / coverWidth),
+                    galleryUrls.length - 1,
+                  ),
+                );
+              }}>
+              {galleryUrls.map((photoUrl, index) => (
+                <Image
+                  key={`${photoUrl}-${index}`}
+                  accessibilityLabel={`${title || 'Attraction'} photo ${index + 1} of ${galleryUrls.length}`}
+                  contentFit="cover"
+                  source={{ uri: photoUrl }}
+                  style={[styles.coverImage, { width: coverWidth, height: coverWidth }]}
+                />
+              ))}
+            </ScrollView>
+          </View>
         ) : (
-          <View style={[styles.coverImage, styles.coverPlaceholder]}>
+          <View
+            style={[
+              styles.coverImage,
+              styles.coverPlaceholder,
+              { width: coverWidth, height: coverWidth },
+            ]}>
             <Feather color={colors.green} name="music" size={42} />
           </View>
         )}
+        {galleryUrls.length > 1 ? (
+          <View style={styles.photoIndicator}>
+            {galleryUrls.map((photoUrl, index) => (
+              <View
+                key={`${photoUrl}-indicator`}
+                style={[
+                  styles.photoDot,
+                  index === activePhotoIndex && styles.photoDotActive,
+                ]}
+              />
+            ))}
+            <Text style={styles.photoCount}>
+              {activePhotoIndex + 1} / {galleryUrls.length}
+            </Text>
+          </View>
+        ) : null}
         <View style={styles.trackInfo}>
           <Text style={styles.trackTitle}>{title || 'Audio Guide'}</Text>
           <Text style={styles.trackSubtitle}>{subtitle || 'Explore the attraction'}</Text>
@@ -319,13 +387,39 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
   },
-  coverImage: {
-    width: '84%',
-    maxWidth: 310,
-    aspectRatio: 1,
+  coverGallery: {
     alignSelf: 'center',
+    overflow: 'hidden',
     borderRadius: 20,
     backgroundColor: colors.line,
+  },
+  coverImage: {
+    borderRadius: 20,
+    backgroundColor: colors.line,
+  },
+  photoIndicator: {
+    minHeight: 18,
+    marginTop: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5,
+  },
+  photoDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#C9C5BD',
+  },
+  photoDotActive: {
+    width: 16,
+    backgroundColor: colors.rust,
+  },
+  photoCount: {
+    marginLeft: 4,
+    color: colors.muted,
+    fontSize: 10,
+    fontWeight: '700',
   },
   coverPlaceholder: {
     alignItems: 'center',
