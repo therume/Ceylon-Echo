@@ -32,6 +32,8 @@ export default function HomeScreen() {
     <ScreenFrame
       title={t('discoverSriLankaTitle')}
       subtitle={t('discoverSriLankaSubtitle')}
+      onBack={() => router.replace('/')}
+      showBackButton
       onProfile={() => router.push('/(tabs)/profile')}>
       <View style={styles.search}>
         <Text style={styles.searchIcon}>⌕</Text>

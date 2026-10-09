@@ -137,7 +137,12 @@ export default function LoginScreen() {
             <View style={styles.brandHeader}>
               <View style={styles.brand}>
                 <View style={styles.brandMark}>
-                  <Text style={styles.brandMarkText}>CE</Text>
+                  <Image
+                    accessibilityLabel="Ceylon Echo logo"
+                    contentFit="contain"
+                    source={require('../../assets/images/ce-logo.png')}
+                    style={styles.brandMarkImage}
+                  />
                 </View>
                 <View>
                   <Text style={styles.brandName}>CEYLON ECHO</Text>
@@ -166,7 +171,14 @@ export default function LoginScreen() {
                 />
               ) : (
                 <View style={styles.imageFallback}>
-                  <Text style={styles.fallbackMark}>CE</Text>
+                  <View style={styles.imageFallbackLogo}>
+                    <Image
+                      accessibilityLabel="Ceylon Echo logo"
+                      contentFit="contain"
+                      source={require('../../assets/images/ce-logo.png')}
+                      style={styles.fallbackMarkImage}
+                    />
+                  </View>
                   <Text style={styles.fallbackCopy}>{t('islandAwaits')}</Text>
                 </View>
               )}
@@ -488,21 +500,19 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   brandMark: {
-    width: 39,
-    height: 39,
+    width: 41,
+    height: 41,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: '#d5c7a8',
     borderRadius: 13,
     backgroundColor: '#285944',
+    overflow: 'hidden',
   },
-  brandMarkText: {
-    color: '#ffffff',
-    fontFamily: 'serif',
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.4,
+  brandMarkImage: {
+    width: 32,
+    height: 32,
   },
   brandName: {
     color: '#294e3e',
@@ -552,14 +562,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#496552',
   },
-  fallbackMark: {
-    color: '#f0d39f',
-    fontFamily: 'serif',
-    fontSize: 32,
-    fontWeight: '700',
+  imageFallbackLogo: {
+    width: 72,
+    height: 72,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    backgroundColor: 'rgba(28, 58, 45, 0.8)',
+    overflow: 'hidden',
+  },
+  fallbackMarkImage: {
+    width: 56,
+    height: 56,
   },
   fallbackCopy: {
-    marginTop: 5,
+    marginTop: 10,
     color: '#ffffff',
     fontSize: 12,
   },

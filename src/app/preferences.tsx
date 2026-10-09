@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
+import { Image } from 'expo-image';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { AuthGate } from '@/components/auth-gate';
@@ -88,7 +89,12 @@ function AuthenticatedPreferencesScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <View style={styles.mark}>
-            <Text style={styles.markText}>CE</Text>
+            <Image
+              accessibilityLabel="Ceylon Echo logo"
+              contentFit="contain"
+              source={require('../../assets/images/ce-logo.png')}
+              style={styles.markImage}
+            />
           </View>
           <Text style={styles.step}>{t('preferencesStep')}</Text>
         </View>
@@ -173,12 +179,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 9,
     backgroundColor: '#285944',
+    overflow: 'hidden',
   },
-  markText: {
-    color: '#ffffff',
-    fontFamily: 'serif',
-    fontSize: 11,
-    fontWeight: '700',
+  markImage: {
+    width: 24,
+    height: 24,
   },
   step: {
     color: '#85877f',

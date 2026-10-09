@@ -65,7 +65,12 @@ export default function LanguageScreen() {
         <Animated.View entering={FadeIn.duration(500)} style={styles.brandRow}>
           <View style={styles.brand}>
             <View style={styles.brandMark}>
-              <Text style={styles.brandMarkText}>CE</Text>
+              <Image
+                accessibilityLabel="Ceylon Echo logo"
+                contentFit="contain"
+                source={require('../../assets/images/ce-logo.png')}
+                style={styles.brandMarkImage}
+              />
             </View>
             <View>
               <Text style={styles.brandName}>CEYLON ECHO</Text>
@@ -94,7 +99,14 @@ export default function LanguageScreen() {
             />
           ) : (
             <View style={styles.photoFallback}>
-              <Text style={styles.photoFallbackMark}>CE</Text>
+              <View style={styles.photoFallbackLogo}>
+                <Image
+                  accessibilityLabel="Ceylon Echo logo"
+                  contentFit="contain"
+                  source={require('../../assets/images/ce-logo.png')}
+                  style={styles.photoFallbackMarkImage}
+                />
+              </View>
               <Text style={styles.photoFallbackText}>{t('islandAwaits')}</Text>
             </View>
           )}
@@ -233,19 +245,17 @@ const styles = StyleSheet.create({
     gap: 9,
   },
   brandMark: {
-    width: 37,
-    height: 37,
+    width: 39,
+    height: 39,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 11,
     backgroundColor: '#285944',
+    overflow: 'hidden',
   },
-  brandMarkText: {
-    color: '#ffffff',
-    fontFamily: 'serif',
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+  brandMarkImage: {
+    width: 31,
+    height: 31,
   },
   brandName: {
     color: '#26382f',
@@ -315,14 +325,21 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#536b52',
   },
-  photoFallbackMark: {
-    color: '#f0d39f',
-    fontFamily: 'serif',
-    fontSize: 25,
-    fontWeight: '700',
+  photoFallbackLogo: {
+    width: 62,
+    height: 62,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 18,
+    backgroundColor: 'rgba(20, 39, 30, 0.72)',
+    overflow: 'hidden',
+  },
+  photoFallbackMarkImage: {
+    width: 48,
+    height: 48,
   },
   photoFallbackText: {
-    marginTop: 6,
+    marginTop: 10,
     color: '#ffffff',
     fontSize: 11,
     textAlign: 'center',

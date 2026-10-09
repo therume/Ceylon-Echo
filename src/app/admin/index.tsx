@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 
 import { useAdminAuth } from '@/features/admin/admin-auth';
 import { AdminButton, AdminField, AdminScreen, adminColors } from '@/features/admin/admin-ui';
@@ -54,8 +54,13 @@ export default function AdminLoginScreen() {
           <Text style={styles.brandName}>Ceylon Echo</Text>
           <Text style={styles.brandCaption}>Staff & Curator Portal</Text>
           <View style={styles.brandMark}>
-            <Text style={styles.brandMarkText}>♧</Text>
-          </View>
+              <Image
+                accessibilityLabel="Ceylon Echo logo"
+                resizeMode="contain"
+                source={require('../../../assets/images/ce-logo.png')}
+                style={styles.brandMarkImage}
+              />
+            </View>
         </View>
 
         <View style={styles.card}>
@@ -139,13 +144,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 7,
+    borderRadius: 12,
     backgroundColor: adminColors.green,
+    overflow: 'hidden',
   },
-  brandMarkText: {
-    color: '#FFFFFF',
-    fontSize: 34,
-    lineHeight: 42,
+  brandMarkImage: {
+    width: 42,
+    height: 42,
   },
   card: {
     gap: 16,

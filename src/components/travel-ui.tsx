@@ -33,12 +33,16 @@ export function ScreenFrame({
   title,
   subtitle,
   onProfile,
+  onBack,
+  showBackButton = false,
   contentStyle,
 }: {
   children: ReactNode;
   title: string;
   subtitle?: string;
   onProfile?: () => void;
+  onBack?: () => void;
+  showBackButton?: boolean;
   contentStyle?: StyleProp<ViewStyle>;
 }) {
   const pathname = usePathname();
@@ -58,21 +62,37 @@ export function ScreenFrame({
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}>
         <View style={styles.brandHeader}>
-          <View style={styles.brandIdentity}>
-            <View style={styles.brandMark}>
-              <Text style={styles.brandMarkText}>C</Text>
+            <View style={styles.headerLeft}>
+              {showBackButton ? (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Go back to onboarding"
+                  onPress={onBack}
+                  style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}>
+                  <Text style={styles.backButtonText}>‹</Text>
+                </Pressable>
+              ) : null}
+              <View style={styles.brandIdentity}>
+                <View style={styles.brandMark}>
+                  <Image
+                    accessibilityLabel="Ceylon Echo logo"
+                    resizeMode="contain"
+                    source={require('../../assets/images/ce-logo.png')}
+                    style={styles.brandMarkImage}
+                  />
+                </View>
+                <Text style={styles.brandName}>Ceylon Echo</Text>
+              </View>
             </View>
-            <Text style={styles.brandName}>Ceylon Echo</Text>
-          </View>
-          {onProfile ? (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={t('profile')}
-              onPress={onProfile}
-              style={styles.profileButton}>
-              <Text style={styles.profileButtonText}>A</Text>
-            </Pressable>
-          ) : null}
+            {onProfile ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={t('profile')}
+                onPress={onProfile}
+                style={styles.profileButton}>
+                <Text style={styles.profileButtonText}>A</Text>
+              </Pressable>
+            ) : null}
         </View>
         <Text style={styles.screenTitle}>{title}</Text>
         {subtitle ? <Text style={styles.screenSubtitle}>{subtitle}</Text> : null}
@@ -328,24 +348,44 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 15,
   },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   brandIdentity: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
+  backButton: {
+    width: 28,
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: TravelColors.border,
+    borderRadius: 8,
+    backgroundColor: TravelColors.surface,
+  },
+  backButtonText: {
+    color: TravelColors.green,
+    fontSize: 22,
+    fontWeight: '700',
+    lineHeight: 24,
+  },
   brandMark: {
-    width: 25,
-    height: 25,
+    width: 27,
+    height: 27,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 7,
     backgroundColor: TravelColors.green,
+    overflow: 'hidden',
   },
-  brandMarkText: {
-    color: '#ffffff',
-    fontFamily: 'serif',
-    fontSize: 16,
-    fontWeight: '700',
+  brandMarkImage: {
+    width: 22,
+    height: 22,
   },
   brandName: {
     color: TravelColors.ink,

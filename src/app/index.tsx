@@ -112,13 +112,19 @@ export default function WelcomePage() {
             hitSlop={20}
             onPress={handleTitleTap}>
             <View style={styles.brand}>
-              <View style={styles.brandMark}>
-                <Text style={styles.brandMarkText}>CE</Text>
-              </View>
               <Text style={styles.brandName}>CEYLON ECHO</Text>
             </View>
           </Pressable>
         </Animated.View>
+
+        <View style={styles.centerLogoContainer}>
+          <Image
+            accessibilityLabel="Ceylon Echo logo"
+            contentFit="contain"
+            source={require('../../assets/images/ce-logo.png')}
+            style={styles.centerLogo}
+          />
+        </View>
 
         <Animated.View
           entering={FadeInUp.duration(700).delay(120)}
@@ -182,36 +188,30 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     paddingTop: 10,
+    paddingLeft: 4,
   },
   brand: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 9,
   },
-  brandMark: {
-    width: 36,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.72)',
-    borderRadius: 11,
-    backgroundColor: 'rgba(27, 63, 48, 0.82)',
-  },
-  brandMarkText: {
-    color: '#ffffff',
-    fontFamily: 'serif',
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.6,
-  },
   brandName: {
     color: '#ffffff',
     fontSize: 10,
     fontWeight: '700',
     letterSpacing: 2,
+  },
+  centerLogoContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+  },
+  centerLogo: {
+    width: 220,
+    height: 220,
   },
   welcomeCopy: {
     width: '100%',
